@@ -12,7 +12,7 @@ function params(content) {
 function generate(content) {
   const { lambda } = content.params;
   function generate(lambda) {
-    var r = this.random();
+    var r = Math.random();
     return -Math.log(r) / lambda;
   }
 
