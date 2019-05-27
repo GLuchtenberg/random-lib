@@ -2,8 +2,8 @@ const readline = require("readline-sync");
 
 function params(content) {
   function normalParams() {
-    const mu = readline.questionInt("Mu: ");
-    const sigma = readline.questionInt("Sigma: ");
+    const mu = readline.questionFloat("Mu: ");
+    const sigma = readline.questionFloat("Sigma: ");
     return { mu, sigma };
   }
   content.params = normalParams();

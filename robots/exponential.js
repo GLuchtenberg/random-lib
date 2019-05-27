@@ -2,7 +2,7 @@ const readline = require("readline-sync");
 
 function params(content) {
   function exponentialParams() {
-    const lambda = readline.questionInt("Lambda: ");
+    const lambda = readline.questionFloat("Lambda: ");
 
     return { lambda };
   }
