@@ -1,6 +1,6 @@
 const fs = require("fs");
 const contentFilePath = "./result.txt";
-const separator = "\r\n";
+const separator = "\n";
 function save(data) {
   const content = data.join(separator);
   return fs.writeFileSync(contentFilePath, content);
