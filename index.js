@@ -11,7 +11,6 @@ const robots = {
 };
 
 function run(system, iteracao) {
-  
   if( system.tempoAtual >= system.allCars[0] ){
     system.entidadesQueEntraramNoSistema++;
     system.historyFIFO.push(system.allCars[0]);
@@ -20,15 +19,10 @@ function run(system, iteracao) {
     system.allCars.shift();
   }
   const primeiroCarroDaFila = system.carsFIFO[0];
-  // console.log('tmepo atual: ',system.tempoAtual);
-  // console.log('car',primeiroCarroDaFila)
 
   if ( (system.tempoAtual >= system.nextPop) && Boolean(primeiroCarroDaFila) ) {
     system.nextPop = system.tempoAtual + system.ts;
-    console.log(primeiroCarroDaFila)
-    // system.nextPop += system.tempoAtual + system.ts;
-    // system.allCars.shift();
-    system.historyFIFO[system.historyFIFO.length - 1] = system.historyFIFO[system.historyFIFO.length - 1] - system.tempoAtual;
+    system.historyFIFO[system.historyFIFO.length - 1] = system.tempoAtual - system.historyFIFO[system.historyFIFO.length - 1];
     system.carsFIFO.shift();
     system.carsPassed.push(primeiroCarroDaFila);
     system.entidadesPassadasPeloSitema++;    
@@ -41,10 +35,21 @@ async function start() {
   function generateStatistics(system){
     const passedCars = [...system.carsPassed];
     const historyQueu = system.historyFIFO;
+    // console.log(historyQueu)
     system.entityTimeInSystem = passedCars.reduce((total,num) => total+num) / system.tempoAtual;
-    system.entityInQueu = historyQueu.reduce((total,num) => total+num) / system.historyFIFO.length;
+    system.entityInQueu = historyQueu.reduce((total,num) => total + num) / system.historyFIFO.length;
   }
   const { state } = robots;
+  const content = { results: [] };
+  
+    robots.userInput(content);
+    
+    const random = randomFactory(content.type);
+    random.params(content);
+    for (let i = 0; i < content.numberOfNumbers; i++) {
+      random.generate(content);
+    }
+    robots.state.save(content.results);
   const randomNumbersFromFile = state.load();
 
   const randomNumbersT = arrayConvertToFloat(randomNumbersFromFile);
@@ -71,14 +76,7 @@ async function start() {
   };
   robots.arenaInput(system);
   // const generateStatistics = () => ({});
-  // const content = { results: [] };
-  // robots.userInput(content);
-  // const random = randomFactory(content.type);
-  // random.params(content);
-  // for (let i = 0; i < content.numberOfNumbers; i++) {
-  //   random.generate(content);
-  // }
-  // robots.state.save(content.results);
+  
   // const valuesFromFile = robots.state.load();
   // robots.checker(valuesFromFile);
   
