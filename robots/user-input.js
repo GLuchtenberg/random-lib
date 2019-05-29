@@ -13,7 +13,12 @@ function robot(content) {
   function askHowMuchNumbers() {
     return readline.questionInt("Quantos números deseja criar? ");
   }
-
+  function askMaxTime(){
+    return readline.questionInt("Tempo máximo de execução");
+  }
+  function askExecutionTime(){
+    return readline.questionInt("Tempo de serviço");
+  }
   content.type = askAndReturnKindOfOperation();
 
   content.numberOfNumbers = askHowMuchNumbers();

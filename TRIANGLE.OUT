@@ -1,0 +1,50 @@
+
+	Sumário da Distribuição
+
+Distribuição:	Triangular   
+Expressão:	TRIA(4, 4.75, 7)
+Erro quadrático:	0.009535
+
+Test do Chi-Quadrado
+  Número de intervalos	= 10
+  Graus de liberdade 	= 8
+  Teste Estatístico     	= 22.6
+  P-value correspondente	< 0.005
+
+Teste de Kolmogorov-Smirnov
+  Teste Estatistico	= 0.114
+  P-value correspondente	= 0.0108
+
+	Sumário dos Dados
+
+Número de Pontos de Dados	= 200
+Valor Min nos Dados       	= 4.18
+Valor Max nos Dados       	= 6.77
+Média da Amostra          	= 5.12
+Desvio Padrão da Amostra       	= 0.65
+
+	Sumário do Histograma
+
+Intervalo do Histograma    	= 4 to 7
+Número de Intervalos	= 14
+
+
+==================================================================
+Int.   No. de               Probabilidade           Cumulativa      
+No.    Pts. de Dados   x        Densidade               Distribuição    
+------------------------------------------------------------------
+                            Função de Dados         Função de Dados    
+   0     4       4.21     0.0200     0.0204     0.0200     0.0204
+   1    27       4.43      0.135     0.0612      0.155     0.0816
+   2    24       4.64      0.120      0.102      0.275      0.184
+   3    31       4.86      0.155      0.136      0.430      0.320
+   4    22       5.07      0.110      0.129      0.540      0.449
+   5    17       5.29     0.0850      0.116      0.625      0.565
+   6    19       5.50     0.0950      0.102      0.720      0.667
+   7    20       5.71      0.100     0.0884      0.820      0.755
+   8     9       5.93     0.0450     0.0748      0.865      0.830
+   9     6       6.14     0.0300     0.0612      0.895      0.891
+  10    10       6.36     0.0500     0.0476      0.945      0.939
+  11     7       6.57     0.0350     0.0340      0.980      0.973
+  12     4       6.79     0.0200     0.0204       1.00      0.993
+  13     0       7.00      0.000    0.00680       1.00       1.00

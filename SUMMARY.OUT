@@ -1,0 +1,17 @@
+Ajustar Todas
+
+Documento:  C:\Users\Gabriel\Documents\projetos\random-lib\result.txt
+Arquivo de Dados: C:\Users\Gabriel\Documents\projetos\random-lib\result.txt
+
+
+Função       Erro Quadrático
+-----------------------
+Gama          0.00563
+Weibull        0.00596
+Beta           0.00666
+Erlang         0.00696
+Lognormal      0.00746
+Triangular     0.00954
+Normal         0.0137
+Uniforme        0.031
+Exponencial    0.034

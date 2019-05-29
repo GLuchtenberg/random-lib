@@ -5,47 +5,71 @@ function arrayConvertToFloat(values) {
 }
 const robots = {
   userInput: require("./robots/user-input"),
+  arenaInput:require("./robots/user-arena-input"),
   state: require("./robots/content-saver"),
   checker: require("./robots/check-values")
 };
-const finalStatistics = {
-  averageEntitiesOnStack: 0, // media ponderada do numero de entidades nas filas
-  timeOnService: 0,
-  entityOnStackTime: 0, //media aritmética do tempo da entidade na fila
-  numberOfEntities: 0,
-  numberOfEntitiesInSystem: 0,
-  maxNumberOfEntities: 0
-};
 
-function run(system, number) {
-  system.carsFIFO.push(number);
-  const car = system.carsFIFO[0];
-  if (system.tempoAtual + car > system.nextPop) {
-    system.nextPop += system.tempoAtual + system.ts;
-    system.carsPassed.push(number);
+function run(system, iteracao) {
+  
+  if( system.tempoAtual >= system.allCars[0] ){
+    system.entidadesQueEntraramNoSistema++;
+    system.historyFIFO.push(system.allCars[0]);
+    system.carsFIFO.push(system.allCars[0]);
+    system.maxNumInQueu = system.carsFIFO.length > system.maxNumInQueu ? system.carsFIFO.length : system.maxNumInQueu;
+    system.allCars.shift();
   }
+  const primeiroCarroDaFila = system.carsFIFO[0];
+  // console.log('tmepo atual: ',system.tempoAtual);
+  // console.log('car',primeiroCarroDaFila)
 
-  // if (system.isOcupied) {
-  // }
-  //entra carro no sistema
-  // if (car) system.carsFIFO.push(car);
-
-  // if (!system.isOcupied) {
-  //   system.isOcupied = true;
-  //   system.carsFIFO.pop();
-  // }
-
-  // //sai carro do sistema
-  // if (system.nextPop === Math.floor(system.tempoAtual)) {
-  //   system.isOcupied = false;
-  // }
+  if ( (system.tempoAtual >= system.nextPop) && Boolean(primeiroCarroDaFila) ) {
+    system.nextPop = system.tempoAtual + system.ts;
+    console.log(primeiroCarroDaFila)
+    // system.nextPop += system.tempoAtual + system.ts;
+    // system.allCars.shift();
+    system.historyFIFO[system.historyFIFO.length - 1] = system.historyFIFO[system.historyFIFO.length - 1] - system.tempoAtual;
+    system.carsFIFO.shift();
+    system.carsPassed.push(primeiroCarroDaFila);
+    system.entidadesPassadasPeloSitema++;    
+  }
   system.tempoAtual++;
-
-  console.log(this);
+  system.nIteracoes++;
 }
 
 async function start() {
-  // const { state } = robots;
+  function generateStatistics(system){
+    const passedCars = [...system.carsPassed];
+    const historyQueu = system.historyFIFO;
+    system.entityTimeInSystem = passedCars.reduce((total,num) => total+num) / system.tempoAtual;
+    system.entityInQueu = historyQueu.reduce((total,num) => total+num) / system.historyFIFO.length;
+  }
+  const { state } = robots;
+  const randomNumbersFromFile = state.load();
+
+  const randomNumbersT = arrayConvertToFloat(randomNumbersFromFile);
+  let randomNumbers = [];
+  randomNumbersT.forEach((element,i) => {
+    if(i == 0){
+      return randomNumbers.push(element);
+    }
+    return randomNumbers.push(element+randomNumbers[i-1]);
+  });
+  const system = {
+    allCars: randomNumbers,
+    historyFIFO: [],
+    carsFIFO: [],
+    carsPassed: [],
+    ts: 7,
+    tempoAtual: 0,
+    nextPop: 0,
+    nIteracoes: 0,
+    entidadesQueEntraramNoSistema: 0,
+    entidadesPassadasPeloSitema: 0,
+    maxNumInQueu:0,
+    maxTimeExec: 0,
+  };
+  robots.arenaInput(system);
   // const generateStatistics = () => ({});
   // const content = { results: [] };
   // robots.userInput(content);
@@ -57,32 +81,14 @@ async function start() {
   // robots.state.save(content.results);
   // const valuesFromFile = robots.state.load();
   // robots.checker(valuesFromFile);
-  const randomNumbersFromFile = state.load();
-  const randomNumbers = arrayConvertToFloat(randomNumbersFromFile);
-  const system = {
-    allCars: randomNumbers,
-    carsFIFO: [],
-    carsPassed: [],
-    ts: 5,
-    tempoAtual: 0,
-    nextPop: 0,
-    nIteracoes: 0,
-    entidadesQueEntraramNoSistema: 0,
-    entidadesPassadasPeloSitema: 0
-  };
-  // randomNumbers.map(number => {
-  // return carFactory.create(number);
-  //   const runnedCar = car.run(system);
-  //   return runnedCar;
-  while (system.tempoAtual < 1000) {
-    run(system, number);
+  
+  // while (system.nIteracoes <= system.allCars[system.allCars.length - 1]+1) {
+  while (system.nIteracoes <= system.maxTimeExec) {
+    run(system,system.nIteracoes);
   }
-  // });
-  // while (system.tempoAtual < 1000 && randomNumbers.length > 0) {
-  //   run(system, { ts: randomNumbers[nIteracoes] });
-  // }
-  generateStatistics();
-  console.log(randomNumbers);
+// console.log(system.allCars)
+  generateStatistics(system);
+  console.log(system);
 }
 
 start();
