@@ -10,8 +10,9 @@ const robots = {
   checker: require("./robots/check-values")
 };
 
-function run(system) {
+async function run(system) {
   if (system.tempoAtual >= system.allCars[0]) {
+    console.log(`${system.tempoAtual}: carro entrou`);
     system.entidadesQueEntraramNoSistema++;
 
     system.historyFIFO.push(system.allCars[0]);
@@ -26,21 +27,14 @@ function run(system) {
 
   if (system.tempoAtual >= system.nextPop && Boolean(primeiroCarroDaFila)) {
     let lastCar = system.historyFIFO.pop();
-    // console.log("aaa", {
-    //   ue: system.tempoAtual >= system.nextPop && Boolean(primeiroCarroDaFila),
-    //   ue2: system.tempoAtual >= system.nextPop,
-    //   nextPop: system.nextPop,
-    //   lastCar,
-    //   tempoAtual: system.tempoAtual
-    // });
+
     system.nextPop = system.tempoAtual + system.ts;
     lastCar = system.tempoAtual - lastCar;
     system.historyFIFO.push(lastCar + system.ts);
-    // system.historyFIFO[system.historyFIFO.length - 1] =
-    //   system.tempoAtual - system.historyFIFO[system.historyFIFO.length - 1];
     system.carsFIFO.shift();
     system.carsPassed.push(primeiroCarroDaFila);
     system.entidadesPassadasPeloSitema++;
+    console.log(`${system.tempoAtual}: carro saiu`);
   }
   system.tempoAtual++;
   system.nIteracoes++;
@@ -52,7 +46,6 @@ async function start() {
 
     const historyQueu = system.historyFIFO;
     const historyToCalcTempoOcupado = system.historyFIFO;
-    // console.log(historyToCalcTempoOcupado);
     system.entityTimeInSystem =
       passedCars.reduce((total, num) => total + num) / system.tempoAtual;
     system.entityInQueu =
@@ -61,6 +54,19 @@ async function start() {
     system.servidorOccupied =
       historyToCalcTempoOcupado.reduce((total, num) => total + num) /
       system.tempoAtual;
+
+    return {
+      ts: system.ts,
+      nIteracoes: system.nIteracoes,
+      tempoAtual: system.tempoAtual,
+      entidadesQueEntraramNoSistema: system.entidadesQueEntraramNoSistema,
+      entidadesPassadasPeloSitema: system.entidadesPassadasPeloSitema,
+      maxNumInQueu: system.maxNumInQueu,
+      maxTimeExec: system.maxTimeExec,
+      servidorOccupied: system.servidorOccupied,
+      averageEntityInQueu: system.entityInQueu,
+      averageTimeInSystem: system.entityTimeInSystem
+    };
   }
   const { state } = robots;
   const content = { results: [] };
@@ -84,8 +90,6 @@ async function start() {
       random.generate(content);
     }
   }
-  // console.log(content.typeOfTES);
-
   robots.state.save(content.results);
   const randomNumbersFromFile = state.load();
 
@@ -99,6 +103,7 @@ async function start() {
   });
   const system = {
     allCars: randomNumbers,
+    timeout: 300,
     historyFIFO: [],
     carsFIFO: [],
     carsPassed: [],
@@ -115,8 +120,8 @@ async function start() {
   while (system.nIteracoes <= system.maxTimeExec) {
     run(system, system.nIteracoes);
   }
-  generateStatistics(system);
-  console.log(system);
+  const statistics = generateStatistics(system);
+  console.log(statistics);
 }
 
 start();
