@@ -10,17 +10,9 @@ function robot(content) {
     const textOftype = operations[selectedTypeIndex];
     return textOftype;
   }
-  function askHowMuchNumbers() {
-    return readline.questionInt("Quantos números deseja criar? ");
-  }
-  function askMaxTime(){
-    return readline.questionInt("Tempo máximo de execução");
-  }
-  function askExecutionTime(){
-    return readline.questionInt("Tempo de serviço");
-  }
+
   content.type = askAndReturnKindOfOperation();
 
-  content.numberOfNumbers = askHowMuchNumbers();
+  content.numberOfNumbers = 1000;
 }
 module.exports = robot;
