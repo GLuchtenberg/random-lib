@@ -16,14 +16,18 @@ async function start() {
   function generateStatistics(system) {
     const passedCars = [...system.carsPassed];
     const historyQueu = system.historyFIFO;
+
     const historyToCalcTempoOcupado = system.historyFIFO;
-    system.entityTimeInSystem =
-      passedCars.reduce((total, num) => total + num) / system.tempoAtual;
+    // console.log({ passedCars });
+    // system.entityTimeInSystem =
+    //   passedCars.reduce((total, num) => total + num, 0) / system.tempoAtual;
+    system.entityTimeInSystem = passedCars.pop() / passedCars.length - 1;
     system.entityInQueu =
-      historyQueu.reduce((total, num) => total + num) /
+      historyQueu.reduce((total, num) => total + num, 0) /
       system.historyFIFO.length;
+
     system.servidorOccupied =
-      historyToCalcTempoOcupado.reduce((total, num) => total + num) /
+      historyToCalcTempoOcupado.reduce((total, num) => total + num, 0) /
       system.tempoAtual;
 
     return {
@@ -31,12 +35,13 @@ async function start() {
       nIteracoes: system.nIteracoes,
       tempoAtual: system.tempoAtual,
       entidadesQueEntraramNoSistema: system.entidadesQueEntraramNoSistema,
-      entidadesPassadasPeloSitema: system.entidadesPassadasPeloSitema,
+      entidadesQueSairamDoSitema: system.entidadesPassadasPeloSitema,
       maxNumInQueu: system.maxNumInQueu,
+      maxEntitidadesNoSistema: system.maxNumInSystem,
       maxTimeExec: system.maxTimeExec,
       taxaMediaOcupacaoServidor: system.servidorOccupied,
-      numeroMedioEntidadeEmFila: system.entityInQueu,
-      tempoMedioNoSistema: system.entityTimeInSystem
+      tempoMedioEntidadeEmFila: system.entityInQueu,
+      tempoMedioEntidadeNoSistema: system.entityTimeInSystem
     };
   }
   const { state } = robots;
@@ -46,6 +51,7 @@ async function start() {
     operations,
     "Escolha uma forma de tempo entre serviços"
   );
+
   if (content.typeOfTES === 0) {
     const nTES = readline.questionInt("Tempo entre serviços");
     const arrayOfTES = [];
@@ -85,7 +91,8 @@ async function start() {
     entidadesQueEntraramNoSistema: 0,
     entidadesPassadasPeloSitema: 0,
     maxNumInQueu: 0,
-    maxTimeExec: 0
+    maxTimeExec: 0,
+    maxNumInSystem: 0
   };
   robots.arenaInput(system);
 

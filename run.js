@@ -9,6 +9,12 @@ async function run(system) {
       system.carsFIFO.length > system.maxNumInQueu
         ? system.carsFIFO.length
         : system.maxNumInQueu;
+
+    system.maxNumInSystem =
+      system.carsFIFO.length + 1 > system.maxNumInSystem
+        ? system.carsFIFO.length
+        : system.maxNumInSystem;
+
     system.allCars.shift();
   }
   const primeiroCarroDaFila = system.carsFIFO[0];
